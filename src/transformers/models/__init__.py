@@ -17,7 +17,6 @@
 # limitations under the License.
 
 from . import (
-    plbart,
     albert,
     auto,
     bart,
@@ -71,6 +70,7 @@ from . import (
     openai,
     pegasus,
     phobert,
+    plbart,
     prophetnet,
     rag,
     reformer,

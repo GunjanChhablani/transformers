@@ -133,7 +133,6 @@ _import_structure = {
         "load_tf2_weights_in_pytorch_model",
     ],
     # Models
-    "models.plbart": ["PLBART_PRETRAINED_CONFIG_ARCHIVE_MAP", "PLBartConfig", "PLBartTokenizer"],
     "models": [],
     "models.albert": ["ALBERT_PRETRAINED_CONFIG_ARCHIVE_MAP", "AlbertConfig"],
     "models.auto": [
@@ -223,6 +222,7 @@ _import_structure = {
     "models.openai": ["OPENAI_GPT_PRETRAINED_CONFIG_ARCHIVE_MAP", "OpenAIGPTConfig", "OpenAIGPTTokenizer"],
     "models.pegasus": ["PegasusConfig"],
     "models.phobert": ["PhobertTokenizer"],
+    "models.plbart": ["PLBART_PRETRAINED_CONFIG_ARCHIVE_MAP", "PLBartConfig", "PLBartTokenizer"],
     "models.prophetnet": ["PROPHETNET_PRETRAINED_CONFIG_ARCHIVE_MAP", "ProphetNetConfig", "ProphetNetTokenizer"],
     "models.rag": ["RagConfig", "RagRetriever", "RagTokenizer"],
     "models.reformer": ["REFORMER_PRETRAINED_CONFIG_ARCHIVE_MAP", "ReformerConfig"],
@@ -504,17 +504,6 @@ if is_torch_available():
 
     # PyTorch models structure
 
-    _import_structure["models.plbart"].extend(
-        [
-            "PLBART_PRETRAINED_MODEL_ARCHIVE_LIST",
-            "PLBartForCausalLM",
-            "PLBartForConditionalGeneration",
-            "PLBartForQuestionAnswering",
-            "PLBartForSequenceClassification",
-            "PLBartModel",
-            "PLBartPreTrainedModel",
-        ]
-    )
     _import_structure["models.albert"].extend(
         [
             "ALBERT_PRETRAINED_MODEL_ARCHIVE_LIST",
@@ -980,6 +969,17 @@ if is_torch_available():
     )
     _import_structure["models.pegasus"].extend(
         ["PegasusForCausalLM", "PegasusForConditionalGeneration", "PegasusModel", "PegasusPreTrainedModel"]
+    )
+    _import_structure["models.plbart"].extend(
+        [
+            "PLBART_PRETRAINED_MODEL_ARCHIVE_LIST",
+            "PLBartForCausalLM",
+            "PLBartForConditionalGeneration",
+            "PLBartForQuestionAnswering",
+            "PLBartForSequenceClassification",
+            "PLBartModel",
+            "PLBartPreTrainedModel",
+        ]
     )
     _import_structure["models.prophetnet"].extend(
         [
@@ -1850,7 +1850,6 @@ if TYPE_CHECKING:
         load_tf2_weights_in_pytorch_model,
     )
     from .models.albert import ALBERT_PRETRAINED_CONFIG_ARCHIVE_MAP, AlbertConfig
-    from .models.plbart import PLBART_PRETRAINED_CONFIG_ARCHIVE_MAP, PLBartConfig, PLBartTokenizer
     from .models.auto import (
         ALL_PRETRAINED_CONFIG_ARCHIVE_MAP,
         CONFIG_MAPPING,
@@ -1933,6 +1932,7 @@ if TYPE_CHECKING:
     from .models.openai import OPENAI_GPT_PRETRAINED_CONFIG_ARCHIVE_MAP, OpenAIGPTConfig, OpenAIGPTTokenizer
     from .models.pegasus import PegasusConfig
     from .models.phobert import PhobertTokenizer
+    from .models.plbart import PLBART_PRETRAINED_CONFIG_ARCHIVE_MAP, PLBartConfig, PLBartTokenizer
     from .models.prophetnet import PROPHETNET_PRETRAINED_CONFIG_ARCHIVE_MAP, ProphetNetConfig, ProphetNetTokenizer
     from .models.rag import RagConfig, RagRetriever, RagTokenizer
     from .models.reformer import REFORMER_PRETRAINED_CONFIG_ARCHIVE_MAP, ReformerConfig
@@ -2042,7 +2042,6 @@ if TYPE_CHECKING:
         from .utils.dummy_sentencepiece_objects import *
 
     if is_tokenizers_available():
-        from .models.plbart import PLBartTokenizerFast
         from .models.albert import AlbertTokenizerFast
         from .models.bart import BartTokenizerFast
         from .models.barthez import BarthezTokenizerFast
@@ -2069,6 +2068,7 @@ if TYPE_CHECKING:
         from .models.mt5 import MT5TokenizerFast
         from .models.openai import OpenAIGPTTokenizerFast
         from .models.pegasus import PegasusTokenizerFast
+        from .models.plbart import PLBartTokenizerFast
         from .models.reformer import ReformerTokenizerFast
         from .models.rembert import RemBertTokenizerFast
         from .models.retribert import RetriBertTokenizerFast
@@ -2124,15 +2124,6 @@ if TYPE_CHECKING:
 
     if is_torch_available():
 
-        from .models.plbart import (
-            PLBART_PRETRAINED_MODEL_ARCHIVE_LIST,
-            PLBartForConditionalGeneration,
-            PLBartForCausalLM,
-            PLBartForQuestionAnswering,
-            PLBartForSequenceClassification,
-            PLBartModel,
-            PLBartPreTrainedModel,
-        )
         # Benchmarks
         from .benchmark.benchmark import PyTorchBenchmark
         from .benchmark.benchmark_args import PyTorchBenchmarkArguments
@@ -2576,6 +2567,15 @@ if TYPE_CHECKING:
             PegasusForConditionalGeneration,
             PegasusModel,
             PegasusPreTrainedModel,
+        )
+        from .models.plbart import (
+            PLBART_PRETRAINED_MODEL_ARCHIVE_LIST,
+            PLBartForCausalLM,
+            PLBartForConditionalGeneration,
+            PLBartForQuestionAnswering,
+            PLBartForSequenceClassification,
+            PLBartModel,
+            PLBartPreTrainedModel,
         )
         from .models.prophetnet import (
             PROPHETNET_PRETRAINED_MODEL_ARCHIVE_LIST,
