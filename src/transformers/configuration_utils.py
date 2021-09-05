@@ -87,7 +87,7 @@ class PretrainedConfig(PushToHubMixin):
             Whether cross-attention layers should be added to the model. Note, this option is only relevant for models
             that can be used as decoder models within the `:class:~transformers.EncoderDecoderModel` class, which
             consists of all models in ``AUTO_MODELS_FOR_CAUSAL_LM``.
-        tie_encoder_decoder (:obj:`bool`, `optional`, defaults to :obj:`False`)
+        tie_encoder_decoder (:obj:`bool`, `optional`, defaults to :obj:`False`):
             Whether all encoder weights should be tied to their equivalent decoder weights. This requires the encoder
             and decoder model to have the exact same parameter names.
         prune_heads (:obj:`Dict[int, List[int]]`, `optional`, defaults to :obj:`{}`):
@@ -541,6 +541,10 @@ class PretrainedConfig(PushToHubMixin):
                 f"- '{pretrained_model_name_or_path}' is a correct model identifier listed on 'https://huggingface.co/models'\n\n"
                 f"- or '{pretrained_model_name_or_path}' is the correct path to a directory containing a {CONFIG_NAME} file\n\n"
             )
+
+            if revision is not None:
+                msg += f"- or '{revision}' is a valid git identifier (branch name, a tag name, or a commit id) that exists for this model name as listed on its model page on 'https://huggingface.co/models'\n\n"
+
             raise EnvironmentError(msg)
 
         except json.JSONDecodeError:
