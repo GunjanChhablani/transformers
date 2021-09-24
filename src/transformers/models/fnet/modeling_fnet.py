@@ -170,12 +170,6 @@ class FNetBasicFourierTransform(nn.Module):
             self.fourier_transform = partial(torch.fft.fftn, dim=(1, 2))
         elif config.max_position_embeddings <= 4096:
             if is_scipy_available():
-                self.register_buffer(
-                    "dft_mat_hidden", torch.tensor(linalg.dft(config.hidden_size), dtype=torch.complex64)
-                )
-                self.register_buffer(
-                    "dft_mat_seq", torch.tensor(linalg.dft(config.tpu_short_seq_length), dtype=torch.complex64)
-                )
                 self.fourier_transform = partial(
                     two_dim_matmul, matrix_dim_one=self.dft_mat_seq, matrix_dim_two=self.dft_mat_hidden
                 )
@@ -283,6 +277,11 @@ class FNetEncoder(nn.Module):
     def __init__(self, config):
         super().__init__()
         self.config = config
+        
+        if config.use_tpu_fourier_optimizations and is_scipy_available():
+           self.dft_mat_hidden = nn.Parameter(torch.tensor(linalg.dft(config.hidden_size), dtype=torch.complex64), requires_grad=False)
+           self.dft_mat_seq =  nn.Parameter(torch.tensor(linalg.dft(config.tpu_short_seq_length), dtype=torch.complex64), requires_grad=False)
+        
         self.layer = nn.ModuleList([FNetLayer(config) for _ in range(config.num_hidden_layers)])
         self.gradient_checkpointing = False
 
