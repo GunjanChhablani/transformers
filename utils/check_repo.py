@@ -103,6 +103,7 @@ IGNORE_NON_AUTO_CONFIGURED = PRIVATE_MODELS.copy() + [
     "PLBartEncoder",
     "PLBartDecoder",
     "PLBartDecoderWrapper",
+    "FlaxBeitForMaskedImageModeling",
     "BeitForMaskedImageModeling",
     "CLIPTextModel",
     "CLIPVisionModel",

@@ -21,6 +21,7 @@ from typing import Dict, Set, Tuple, Union
 import flax.linen as nn
 import jax
 import jax.numpy as jnp
+import msgpack.exceptions
 from flax.core.frozen_dict import FrozenDict, unfreeze
 from flax.serialization import from_bytes, to_bytes
 from flax.traverse_util import flatten_dict, unflatten_dict
@@ -327,7 +328,8 @@ class FlaxPreTrainedModel(PushToHubMixin, FlaxGenerationMixin):
                 logger.error(err)
                 msg = (
                     f"Can't load weights for '{pretrained_model_name_or_path}'. Make sure that:\n\n"
-                    f"- '{pretrained_model_name_or_path}' is a correct model identifier listed on 'https://huggingface.co/models'\n\n"
+                    f"- '{pretrained_model_name_or_path}' is a correct model identifier listed on 'https://huggingface.co/models'\n"
+                    f"  (make sure '{pretrained_model_name_or_path}' is not a path to a local directory with something else, in that case)\n\n"
                     f"- or '{pretrained_model_name_or_path}' is the correct path to a directory containing a file named {WEIGHTS_NAME}.\n\n"
                 )
                 raise EnvironmentError(msg)
@@ -348,8 +350,19 @@ class FlaxPreTrainedModel(PushToHubMixin, FlaxGenerationMixin):
             with open(resolved_archive_file, "rb") as state_f:
                 try:
                     state = from_bytes(cls, state_f.read())
-                except UnpicklingError:
-                    raise EnvironmentError(f"Unable to convert {archive_file} to Flax deserializable object. ")
+                except (UnpicklingError, msgpack.exceptions.ExtraData) as e:
+                    try:
+                        with open(resolved_archive_file) as f:
+                            if f.read().startswith("version"):
+                                raise OSError(
+                                    "You seem to have cloned a repository without having git-lfs installed. Please install "
+                                    "git-lfs and run `git lfs install` followed by `git lfs pull` in the folder "
+                                    "you cloned."
+                                )
+                            else:
+                                raise ValueError from e
+                    except (UnicodeDecodeError, ValueError):
+                        raise EnvironmentError(f"Unable to convert {archive_file} to Flax deserializable object. ")
             # make sure all arrays are stored as jnp.arrays
             # NOTE: This is to prevent a bug this will be fixed in Flax >= v0.3.4:
             # https://github.com/google/flax/issues/1261
